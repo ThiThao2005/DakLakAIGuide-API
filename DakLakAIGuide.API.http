@@ -1,0 +1,6 @@
+@DakLakAIGuide.API_HostAddress = http://localhost:5093
+
+GET {{DakLakAIGuide.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
