@@ -4,6 +4,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString =
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -11,14 +15,18 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "http://localhost:3000")
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://dak-lak-ai-guide-client.vercel.app"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -32,7 +40,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
