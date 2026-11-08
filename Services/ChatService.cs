@@ -254,6 +254,32 @@ public class ChatService
             sb.AppendLine();
         }
 
+        var foods = await _context.Foods.AsNoTracking().OrderBy(f => f.FoodId).ToListAsync(ct);
+        sb.AppendLine("\n=== DỮ LIỆU: ẨM THỰC ===");
+        foreach (var f in foods)
+        {
+            sb.Append($"- [{f.FoodId}] {f.Name}");
+            if (!string.IsNullOrWhiteSpace(f.FoodType)) sb.Append($" | Loại: {f.FoodType}");
+            if (!string.IsNullOrWhiteSpace(f.PriceRange)) sb.Append($" | Giá: {f.PriceRange}");
+            if (!string.IsNullOrWhiteSpace(f.WhereToEat)) sb.Append($" | Ăn ở đâu: {Short(f.WhereToEat, 200)}");
+            if (!string.IsNullOrWhiteSpace(f.Address)) sb.Append($" | Địa chỉ: {f.Address}");
+            if (!string.IsNullOrWhiteSpace(f.Description)) sb.Append($" | Mô tả: {Short(f.Description, 300)}");
+            sb.AppendLine();
+        }
+
+        var events = await _context.Events.AsNoTracking().OrderBy(e => e.StartDate).ToListAsync(ct);
+        sb.AppendLine($"\n=== DỮ LIỆU: LỄ HỘI & SỰ KIỆN (hôm nay là {DateTime.UtcNow.AddHours(7):dd/MM/yyyy}) ===");
+        foreach (var e in events)
+        {
+            sb.Append($"- [{e.EventId}] {e.Name}");
+            if (e.StartDate is { } s) sb.Append($" | Từ {s:dd/MM/yyyy}");
+            if (e.EndDate is { } en) sb.Append($" đến {en:dd/MM/yyyy}");
+            if (!string.IsNullOrWhiteSpace(e.TimeNote)) sb.Append($" | Thời gian: {e.TimeNote}");
+            if (!string.IsNullOrWhiteSpace(e.Location)) sb.Append($" | Địa điểm: {e.Location}");
+            if (!string.IsNullOrWhiteSpace(e.Description)) sb.Append($" | Mô tả: {Short(e.Description, 300)}");
+            sb.AppendLine();
+        }
+
         return sb.ToString();
     }
 
