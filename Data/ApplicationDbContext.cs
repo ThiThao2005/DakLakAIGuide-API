@@ -19,6 +19,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<CulturalArticle> CulturalArticles => Set<CulturalArticle>();
     public DbSet<CulturalCategory> CulturalCategories => Set<CulturalCategory>();
 
+    public DbSet<TourismEvent> Events => Set<TourismEvent>();
+    public DbSet<Food> Foods => Set<Food>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

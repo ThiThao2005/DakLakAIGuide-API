@@ -1,5 +1,6 @@
 using DakLakAIGuide.API.Data;
 using DakLakAIGuide.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public class OcopProductsController : ControllerBase
         return Ok(product);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateProduct(OcopProduct product)
     {
@@ -52,6 +54,7 @@ public class OcopProductsController : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { id = product.ProductId }, product);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProduct(int id, OcopProduct product)
     {
@@ -77,6 +80,7 @@ public class OcopProductsController : ControllerBase
         return Ok(existing);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
