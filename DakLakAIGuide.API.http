@@ -1,6 +1,19 @@
-@DakLakAIGuide.API_HostAddress = http://localhost:5093
+@host = http://localhost:5093
 
-GET {{DakLakAIGuide.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Danh sách địa điểm
+GET {{host}}/api/places
 
-###
+### Danh mục
+GET {{host}}/api/categories/places
+
+### Đăng nhập admin (mật khẩu xem trong appsettings.Development.json)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "<mật khẩu>" }
+
+### Hỏi chatbot
+POST {{host}}/api/chat
+Content-Type: application/json
+
+{ "messages": [ { "role": "user", "content": "Gợi ý lịch trình 2 ngày ở Buôn Ma Thuột" } ] }
