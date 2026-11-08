@@ -36,6 +36,8 @@ if (string.IsNullOrWhiteSpace(jwtKey) || jwtKey.Length < 32)
 }
 
 builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ChatService>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -56,10 +58,19 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-// ===== Giới hạn tần suất đăng nhập (chống dò mật khẩu) =====
+// ===== Giới hạn tần suất gọi chatbot (tránh tốn chi phí AI) =====
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("chat", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
     options.AddPolicy("login", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
