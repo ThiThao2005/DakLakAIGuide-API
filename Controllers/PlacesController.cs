@@ -1,5 +1,6 @@
 using DakLakAIGuide.API.Data;
 using DakLakAIGuide.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public class PlacesController : ControllerBase
         return Ok(place);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreatePlace(TouristPlace place)
     {
@@ -52,6 +54,7 @@ public class PlacesController : ControllerBase
         return CreatedAtAction(nameof(GetPlace), new { id = place.PlaceId }, place);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdatePlace(int id, TouristPlace place)
     {
@@ -78,6 +81,7 @@ public class PlacesController : ControllerBase
         return Ok(existing);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePlace(int id)
     {

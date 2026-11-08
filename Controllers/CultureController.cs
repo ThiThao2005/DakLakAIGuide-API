@@ -1,5 +1,6 @@
 using DakLakAIGuide.API.Data;
 using DakLakAIGuide.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +41,7 @@ public class CultureController : ControllerBase
         return Ok(article);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateArticle(CulturalArticle article)
     {
@@ -51,6 +53,7 @@ public class CultureController : ControllerBase
         return CreatedAtAction(nameof(GetArticle), new { id = article.ArticleId }, article);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateArticle(int id, CulturalArticle article)
     {
@@ -69,6 +72,7 @@ public class CultureController : ControllerBase
         return Ok(existing);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteArticle(int id)
     {
